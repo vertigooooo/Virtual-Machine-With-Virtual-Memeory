@@ -28,7 +28,11 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    page.h \
+    process.h \
+    job.h \
+    hardware.h
 
 FORMS += \
         mainwindow.ui
