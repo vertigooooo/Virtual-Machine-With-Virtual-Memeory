@@ -1,6 +1,8 @@
 #ifndef PAGE_H
 #define PAGE_H
 
+
+//页表项类
 class Page{
 public:
     int PageId;     //页号
@@ -11,6 +13,7 @@ public:
     void Init(int page_id, int is_dwell_in);    //初始化函数
 };
 
+//页表类
 class PageTabel{
 public:
     Page *page;     //包含的页表项
