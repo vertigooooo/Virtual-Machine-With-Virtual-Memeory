@@ -14,12 +14,12 @@ public:
 };
 
 //页表类
-class PageTabel{
+class PageTable{
 public:
     Page *page;     //包含的页表项
     int length;     //页表长度
 
-    PageTabel();
+    PageTable();
     void InsertPage(Page page, int location);  //插入页表项
     void DelPage(int page_id);     //根据页号删除页表项
     Page GetPage(int page_id);  //查找页表项,并返回查找到的页表项
