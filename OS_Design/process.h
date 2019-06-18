@@ -14,7 +14,6 @@ public:
     int LogAddr;    //指令的逻辑地址，pc随机生成 ，-> ID*1024+random(0,1023)
     int RemainTime; //指令运行剩余需要的时间
 
-
     Instruct();
     void Init(int ins_id);      //初始化
     void ChangeId(int target_id);     //修改id
@@ -29,9 +28,8 @@ public:
     int ProcState;      //进程的状态 0是阻塞， 1是就绪， 2是在运行
     int InstructNum;    //对应的作业的指令个数，用于判断作业是否完成
     int RunTime;        //进程的运行时间
+    int CurrentInsID;   //当前运行的指令的id
     Instruct *InstructArray;    //进程包含的指令
-
-
 
     Process();
     Process(int proc_id, int refer_jobi_id, int proc_state, int ins_num);   //初始化
@@ -53,7 +51,7 @@ public:
 
     void InsertProc(Process process, int location);     //插入进程
     void DelProc(int proc_id);      //根据进程号删除进程
-    Process SearchProc(int proc_id);    //根据进程号查找进程并返回
+    void SearchProc(int proc_id, Process &target_process);    //根据进程号查找进程并返回
 
 };
 
@@ -65,8 +63,8 @@ typedef struct Qnode{       //队列结点类型
 
 class ProcQueue{           //进程队列
 public:
-    ProcNodePtr head;
-    ProcNodePtr rear;
+    ProcNodePtr head;       //头结点
+    ProcNodePtr rear;       //尾结点
 
     ProcQueue();
     void AppendProc(Process process);      //进程入队
