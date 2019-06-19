@@ -1,6 +1,3 @@
-#ifndef HARDWARE_H
-#define HARDWARE_H
-
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -147,22 +144,22 @@ public:
         }
     }
 
-    //把物理块表输出到文件
-    void Print(std::ofstream& file){
+//    //把物理块表输出到文件
+//    void Print(std::ofstream& file){
 
-        file<<"剩余空间（块）："<<RemainSpace<<"\r\n"<<"已用空间（块）："<<UsedSpace<<"\r\n";
-        file<<"内存物理块情况（第一个数：0为空闲，1为占用;第二个数：-1表示未分配给任何进程，其他数字表示占有改块的进程ID）:"<<"\r\n";
-        for(int i = 1;i <= blockTable.length;i++)
-        {
-            file<<blockTable.block[i].BlockId<<"("<<blockTable.block[i].BlockState<<","<<blockTable.block[i].OwnerPro<<")";
-            file<<"    ";
-            if(i % 10 == 0)
-            {
-                file<<"\r\n";
-            }
-        }
-        file<<"\r\n";
-    }
+//        file<<"剩余空间（块）："<<RemainSpace<<"\r\n"<<"已用空间（块）："<<UsedSpace<<"\r\n";
+//        file<<"内存物理块情况（第一个数：0为空闲，1为占用;第二个数：-1表示未分配给任何进程，其他数字表示占有改块的进程ID）:"<<"\r\n";
+//        for(int i = 1;i <= blockTable.length;i++)
+//        {
+//            file<<blockTable.block[i].BlockId<<"("<<blockTable.block[i].BlockState<<","<<blockTable.block[i].OwnerPro<<")";
+//            file<<"    ";
+//            if(i % 10 == 0)
+//            {
+//                file<<"\r\n";
+//            }
+//        }
+//        file<<"\r\n";
+//    }
 };
 
 
@@ -228,5 +225,3 @@ public:
 };
 
 
-
-#endif // HARDWARE_H

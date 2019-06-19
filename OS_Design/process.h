@@ -4,6 +4,8 @@
 #include "page.h"
 #include "hardware.h"
 
+class ProcTable;
+class ProcQueue;
 
 //指令类
 class Instruct{

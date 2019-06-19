@@ -61,7 +61,7 @@ public:
     }AllocationResult;      //定义枚举类型，判断分配作业资源是否成功
 
     JobAllocate();
-    AllocationResult ScheduleJob(JobQueue &job_queue, Job &target_job, Memory &memory,
+    AllocRes ScheduleJob(JobQueue &job_queue, Job &target_job, Memory &memory,
                                  PageTable &page_table, ProcQueue &ready, JobTable job_table
                                  );     //分配资源给作业
 
