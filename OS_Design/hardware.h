@@ -4,12 +4,90 @@ using namespace std;
 /**************************************************
     在我写这个文件时未定义但在该文件中出现的类
     1, Process
-    2, BlockTable
-    3, Block
 
     另：CpuSceneProtect,CpuSceneRecovery还未实现
 ***************************************************/
 
+//物理块
+class Block{
+public:
+    //物理块号
+    int BlockID;
+
+    //物理块分配状态，0表示空闲，1表示占有
+    int BlockState;
+
+    //当前使用这个块的进程ID(?)
+    int OwnerProcessID;
+
+    //构造函数
+    Block(){
+        BlockID = -1;   //物理块ID从0开始
+        BlockState = 0; //处于未分配状态
+        OwnerProcessID = -1;    //分配给的进程的ID
+    }
+
+    //对应原InitBlock()
+    void SetBlockID(int ID){
+        BlockID = ID;
+    }
+};
+
+//物理块表
+class BlockTable{
+public:
+    //基地址
+    Block* blocks;
+
+    //表长
+    int length;
+
+    //构造函数
+    BlockTable(){
+        blocks = new Block[200];
+        length = 0;
+    }
+
+    //在Block_Table表的第i个数据元素之前插入一个Block x (Block_Table表的0位空出)
+    void InsertBlock(Block inputBlock,int location){
+        if(location < 1 || location > length + 1)
+            cout << "插入位置错误" << endl;
+        else{
+            length++;
+            int i;
+            for (i = length - 1;i > location - 1;i--)
+                blocks[i+1] = blocks[i];
+            blocks[i + 1] = inputBlock;
+        }
+    }
+
+    //根据物理块ID，查找物理块表中的某个物理块，返回给同类的参数
+    void SearchBlockID(int blockID,Block &outputBlock){
+        for(int i = 1;i < length;i++)
+            if(blocks[i].BlockID == blockID){
+                outputBlock = blocks[i];
+                return;
+            }
+        cout << "未找到该ID对应的物理块" << endl;
+        return;
+    }
+
+    //根据ID删除物理块表中该位置的物理块
+    void DeleteBlockID(int blockID){
+        for (int i = 1;i < length + 1;i++) {
+            if(blocks[i].BlockID == blockID){
+                //找到该块后:
+                for (int k = i+1;k < length + 1;k++)
+                    blocks[k-1] = blocks[k];
+                length--;
+                return ;
+            }
+        }
+        cout << "BlockTable表中没有该ID的物理块" << endl;
+        return;
+    }
+
+};
 
 //对CPU的模拟，主要包含一些记录数据
 class CPU{
@@ -18,7 +96,7 @@ public:
     int NowProcessID;
 
     //当前正在执行的进程的指令的序号
-    int IR;
+    int CurrentInsID;
 
     //记录当前CPU的状态
     enum StatusCode{
@@ -34,10 +112,17 @@ public:
     }
 
     //CPU现场保护函数
-    int CpuSceneProtect(Process &e);
+    void CpuSceneProtect(Process &e){
+        e.CurrentInsID = CurrentInsID;
+        CpuStatus = FREE;
+    }
 
     //CPU现场恢复函数
-    int CpuSceneRecovery(Process e);
+    void CpuSceneRecovery(Process e){
+        NowProcessID = e.ProcId;
+        CurrentInsID = e.CurrentInsID;
+        CpuStatus = BUSY;
+    }
 
 };
 
@@ -78,7 +163,7 @@ public:
         //初始化物理块表
         Block* blocks = new Block[BlockNumber];
         for (int i = 0;i < BlockNumber;i++) {
-            blocks[i].InitBlock(i);
+            blocks[i].SetBlockID(i);
             blockTable.InsertBlock(blocks[i],i+1);
         }
     }
@@ -108,12 +193,12 @@ public:
             while (needSize > 0) {
 
                 //如果当前块是空闲的(0)，就进行分配
-                if(blockTable.block[index_blocks].BlockState == 0){
+                if(blockTable.blocks[index_blocks].BlockState == 0){
 
                     //设置该物理块的信息：占用、对应进程的ID
-                    blockTable.block[index_blocks].BlockState = 1;
-                    blockTable.block[index_blocks].OwnerPro = JobID;
-                    page_table.page[index_pages].BlockId = blockTable.block[index_blocks].BlockId;
+                    blockTable.blocks[index_blocks].BlockState = 1;
+                    blockTable.blocks[index_blocks].OwnerProcessID = JobID;
+                    page_table.page[index_pages].BlockId = blockTable.blocks[index_blocks].BlockID;
 
                     //更新索引
                     RemainSpace--;UsedSpace++;needSize--;index_pages++;
@@ -132,10 +217,10 @@ public:
         int i = 0;
         while(usedSize > 0)
         {
-            if(blockTable.block[i].OwnerPro == ProID)//找出需要归还的块
+            if(blockTable.blocks[i].OwnerProcessID == ProID)//找出需要归还的块
             {
-                blockTable.block[i].BlockState = 0;//置占用标志为0
-                blockTable.block[i].OwnerPro = -1;//清空占有进程标志位
+                blockTable.blocks[i].BlockState = 0;//置占用标志为0
+                blockTable.blocks[i].OwnerProcessID = -1;//清空占有进程标志位
                 RemainSpace++;//从空闲块数中减去本次占用块数
                 UsedSpace--;
                 usedSize--;
@@ -175,7 +260,7 @@ public:
     MMU() = default;
 
     //使用页号和偏移量访问内存（？）
-    void go(std::ofstream& file, PageTable& page_table,int addr,int& pageid, int& offset,int& paddr){
+    void pageManage(std::ofstream& file, PageTable& page_table,int addr,int& pageid, int& offset,int& paddr){
         setPageTableAddr(page_table);
         AddrToPage(addr, pageid, offset);
         std::cout<<"逻辑地址分解完成:页号为"<<pageid<<",偏移地址为"<<offset<<std::endl;
@@ -198,7 +283,7 @@ public:
     void VisitPageTable(std::ofstream& file, int pageID, int pageOffset, int& realAddr){
 
         Page temp;
-        pageTableAddr->SearchPageId(pageID,temp);//页号为索引搜索页表
+        pageTableAddr->GetPage(pageID,temp);//页号为索引搜索页表
         if(temp.isDwellIn == 1)//如果页表命中,可送出页框号，并与页内位移拼接成物理地址
         {
             realAddr = temp.BlockId * 1000 + pageOffset;
@@ -218,10 +303,10 @@ public:
     }
 
     //缺页中断
+    //??????????????????????????????????????什么鬼
+    //缺页中断：待实现
     void MissPage(int pageID){
         pageTableAddr->page[pageID].isDwellIn = 1;//调入内存
         pageTableAddr->page[pageID].BlockId = pageID*987%100;
     }
 };
-
-
