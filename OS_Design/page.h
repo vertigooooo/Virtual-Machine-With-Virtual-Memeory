@@ -1,6 +1,11 @@
 #ifndef PAGE_H
 #define PAGE_H
 
+#include "hardware.h"
+class Page;
+class PageTable;
+
+
 
 //页表项类
 class Page{
@@ -20,9 +25,9 @@ public:
     int length;     //页表长度
 
     PageTable();
-    void InsertPage(Page page, int location);  //插入页表项
+    void InsertPage(Page target_page, int location);  //插入页表项
     void DelPage(int page_id);     //根据页号删除页表项
-    Page GetPage(int page_id);  //查找页表项,并返回查找到的页表项
+    void GetPage(int page_id, Page &target_page);  //查找页表项,并返回查找到的页表项
 };
 
 
