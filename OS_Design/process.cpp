@@ -129,7 +129,7 @@ void ProcQueue::PopProc(Process &process){          //出队列
     }
 }
 
-void ProcQueue::GetTop(Process &process){
+void ProcQueue::GetTop(Process &process){       //获得队首进程
     if(head != rear){
         ProcNodePtr p;
         p = head->next;
@@ -137,7 +137,7 @@ void ProcQueue::GetTop(Process &process){
     }
 }
 
-int ProcQueue::GetLength(){
+int ProcQueue::GetLength(){         //获得队列的长度
     int count = 0;
     ProcNodePtr p;
     p = head->next;
