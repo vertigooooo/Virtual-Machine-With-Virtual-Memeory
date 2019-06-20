@@ -115,7 +115,7 @@ void JobAllocate::ChooseJob(JobQueue &job_queue, Job &target_job){
 //分配资源
 int JobAllocate::AllocateResource(Memory &memory, Job job, PageTable &page_table,
                                    JobQueue &job_queue, JobTable &job_table){
-    int i = memory.AllocateMem();
+    int i = memory.AllocateMem(job.MemorySize, job.JobId, page_table);
     if(i){
         job_queue.PopJob(job);
         job_table.job[job.JobId].ReferProcId = job.JobId;
