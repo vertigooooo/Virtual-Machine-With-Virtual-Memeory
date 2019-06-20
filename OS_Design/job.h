@@ -1,4 +1,5 @@
-
+#ifndef JOB_H
+#define JOB_H
 #include "page.h"
 #include "process.h"
 #include "hardware.h"
@@ -69,4 +70,4 @@ public:
                          JobQueue &job_queue, JobTable &job_table);     //分配资源
     void CreateProcess(Job temp_job, ProcTable &proc_table, ProcQueue &ready);  //为作业创建进程
 };
-
+#endif
