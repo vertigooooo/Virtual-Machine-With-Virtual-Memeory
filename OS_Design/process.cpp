@@ -147,3 +147,39 @@ int ProcQueue::GetLength(){         //获得队列的长度
     }
     return count;
 }
+
+//物理块队列
+
+BlockQueue::BlockQueue(){
+    rear = new Bnode;
+    head = rear;
+    head->next = nullptr;
+}
+
+void BlockQueue::AppendBlock(Block target_block){        //物理块入队
+    BlockNodePtr b;
+    b = new Bnode;
+    b->data = target_block;
+    rear->next = b;
+    rear = b;
+}
+
+void BlockQueue::PopBlock(Block &target_block){         //物理块出队
+    if(rear != head){
+        BlockNodePtr b;
+        b = head->next;
+        target_block = b->data;
+        head->next = b->next;
+        if(rear == b){                                  //若是最后一个元素
+            rear = head;
+        }
+    }
+}
+
+void BlockQueue::GetTop(Block &target_block){           //取队首物理块
+    if(rear != head){
+        BlockNodePtr b;
+        b = head->next;
+        target_block = b->data;
+    }
+}

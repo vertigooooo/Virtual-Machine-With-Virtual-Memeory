@@ -4,8 +4,10 @@
 #include "page.h"
 #include "hardware.h"
 
+
 class ProcTable;
 class ProcQueue;
+class Block;
 
 //指令类
 class Instruct{
@@ -34,7 +36,7 @@ public:
     Instruct *InstructArray;    //进程包含的指令
 
     Process();
-    Process(int proc_id, int refer_jobi_id, int proc_state, int ins_num);   //初始化
+    Process(int proc_id, int refer_jobi_id, int ins_num);   //初始化
 
     void ForkProc(ProcTable &proc_table, ProcQueue &ready);    //就绪进程创建,送入到ready中去
     void BlockProc(ProcTable &proc_table, ProcQueue &block);   //进程阻塞
@@ -74,5 +76,23 @@ public:
     void GetTop(Process &process);          //取队首进程
     int GetLength();        //获取队列长度
 
+};
+
+//物理块队列，用于实现页面置换算法
+typedef struct Bnode{   //物理块队列类型结点
+    Block data;
+    struct Bnode *next;
+}BlockNode, *BlockNodePtr;
+
+class BlockQueue{       //物理块队列类
+public:
+    BlockNodePtr head;      //头结点
+    BlockNodePtr rear;      //尾结点
+
+    BlockQueue();
+    void AppendBlock(Block target_block);      //物理块入队
+    void PopBlock(Block &target_block);         //物理块出队
+    void GetTop(Block &target_block);          //取队首物理块
+    int GetLength();        //获取队列长度
 };
 #endif // PROCESS_H
