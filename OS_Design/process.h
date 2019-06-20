@@ -1,6 +1,3 @@
-#ifndef PROCESS_H
-#define PROCESS_H
-
 #include "page.h"
 #include "hardware.h"
 
@@ -95,4 +92,3 @@ public:
     void GetTop(Block &target_block);          //取队首物理块
     int GetLength();        //获取队列长度
 };
-#endif // PROCESS_H

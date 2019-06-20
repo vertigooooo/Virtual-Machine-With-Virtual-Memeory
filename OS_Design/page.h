@@ -1,5 +1,3 @@
-#ifndef PAGE_H
-#define PAGE_H
 
 #include "hardware.h"
 class Page;
@@ -33,5 +31,3 @@ public:
 
 
 
-
-#endif // PAGE_H

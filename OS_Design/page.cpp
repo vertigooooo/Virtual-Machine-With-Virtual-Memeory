@@ -24,7 +24,7 @@ void PageTable::InsertPage(Page target_page, int location){     //插入页
     if(!(location < 1 || location > length + 1)){
         length++;
         for(loc_point = length - 1; loc_point > location -1; loc_point--){
-            page[loc_point + 1] = page[loc_point]
+            page[loc_point + 1] = page[loc_point];
         }
         page[loc_point + 1] = target_page;
     }

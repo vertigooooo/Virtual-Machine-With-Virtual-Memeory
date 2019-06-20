@@ -1,5 +1,3 @@
-#ifndef JOB_H
-#define JOB_H
 
 #include "page.h"
 #include "process.h"
@@ -61,14 +59,14 @@ public:
     }AllocationResult;      //定义枚举类型，判断分配作业资源是否成功
 
     JobAllocate();
-    AllocRes ScheduleJob(JobQueue &job_queue, Job &target_job, Memory &memory,
-                                 PageTable &page_table, ProcQueue &ready, JobTable job_table
-                                 );     //分配资源给作业
+    AllocRes ScheduleJob(JobQueue &job_queue, Job &target_job,
+                         Memory &memory, PageTable &page_table,
+                         ProcQueue &ready, JobTable job_table,
+                         ProcTable &proc_table );     //分配资源给作业
 
     void ChooseJob(JobQueue &job_queue, Job &target_job);   //根据先来先服务原则选择作业
     int AllocateResource(Memory &memory, Job job, PageTable &page_table,
                          JobQueue &job_queue, JobTable &job_table);     //分配资源
-    int CreateProcess(Job temp_job, ProcTable &proc_table, JobQueue &ready);  //为作业创建进程
+    void CreateProcess(Job temp_job, ProcTable &proc_table, ProcQueue &ready);  //为作业创建进程
 };
 
-#endif // JOB_H

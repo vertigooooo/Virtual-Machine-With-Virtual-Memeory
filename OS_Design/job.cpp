@@ -90,7 +90,7 @@ int JobQueue::GetLength(){
 JobAllocate::JobAllocate(){}
 
 //调度主函数
-JobAllocate::AllocationResult JobAllocate::ScheduleJob(JobQueue &job_queue, Job &target_job,
+JobAllocate::AllocRes JobAllocate::ScheduleJob(JobQueue &job_queue, Job &target_job,
                                           Memory &memory, PageTable &page_table,
                                           ProcQueue &ready, JobTable job_table,
                                           ProcTable &proc_table){
@@ -115,7 +115,7 @@ void JobAllocate::ChooseJob(JobQueue &job_queue, Job &target_job){
 //分配资源
 int JobAllocate::AllocateResource(Memory &memory, Job job, PageTable &page_table,
                                    JobQueue &job_queue, JobTable &job_table){
-    int i = memory.AllocateSpace();
+    int i = memory.AllocateMem();
     if(i){
         job_queue.PopJob(job);
         job_table.job[job.JobId].ReferProcId = job.JobId;
@@ -126,8 +126,8 @@ int JobAllocate::AllocateResource(Memory &memory, Job job, PageTable &page_table
 }
 
 //为作业创建进程
-void JobAllocate::CreateProcess(Job temp_job, ProcTable &proc_table, JobQueue &ready){
-    Process temp_process = new Process(temp_job.JobId, temp_job.ReferProcId,
+void JobAllocate::CreateProcess(Job temp_job, ProcTable &proc_table, ProcQueue &ready){
+    Process temp_process = * new Process(temp_job.JobId, temp_job.ReferProcId,
                                        temp_job.MemorySize);
     temp_process.ForkProc(proc_table,ready);
 }
