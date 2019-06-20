@@ -1,3 +1,5 @@
+#ifndef HARDWARE_H
+#define HARDWARE_H
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -315,3 +317,4 @@ public:
         pageTableAddr->page[pageID].BlockId = pageID*987%100;
     }
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef PROCESS_H
+#define PROCESS_H
 #include "page.h"
 #include "hardware.h"
 
@@ -97,4 +99,4 @@ public:
     int GetLength();        //获取队列长度
 
 };
-
+#endif

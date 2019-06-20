@@ -1,4 +1,5 @@
-
+#ifndef PAGE_H
+#define PAGE_H
 #include "hardware.h"
 class Page;
 class PageTable;
@@ -28,6 +29,6 @@ public:
     void GetPage(int page_id, Page &target_page);  //查找页表项,并返回查找到的页表项
 };
 
-
+#endif
 
 
