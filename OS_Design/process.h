@@ -5,6 +5,28 @@
 class ProcTable;
 class ProcQueue;
 class Block;
+//class BlockQueue;
+
+/*物理块队列，用于实现页面置换算法*/
+//物理块队列类型结点
+typedef struct Bnode{
+    Block data;
+    struct Bnode *next;
+}BlockNode, *BlockNodePtr;
+
+//物理块队列类
+class BlockQueue{
+public:
+    BlockNodePtr head;      //头结点
+    BlockNodePtr rear;      //尾结点
+
+    BlockQueue();
+    void AppendBlock(Block target_block);      //物理块入队
+    void PopBlock(Block &target_block);         //物理块出队
+    void GetTop(Block &target_block);          //取队首物理块
+    int GetLength();        //获取队列长度
+};
+
 
 //指令类
 class Instruct{
@@ -31,6 +53,7 @@ public:
     int RunTime;        //进程的运行时间
     int CurrentInsID;   //当前运行的指令的id
     Instruct *InstructArray;    //进程包含的指令
+    BlockQueue blockQueue;      //给进程分配的物理块数
 
     Process();
     Process(int proc_id, int refer_jobi_id, int ins_num);   //初始化
@@ -75,20 +98,3 @@ public:
 
 };
 
-//物理块队列，用于实现页面置换算法
-typedef struct Bnode{   //物理块队列类型结点
-    Block data;
-    struct Bnode *next;
-}BlockNode, *BlockNodePtr;
-
-class BlockQueue{       //物理块队列类
-public:
-    BlockNodePtr head;      //头结点
-    BlockNodePtr rear;      //尾结点
-
-    BlockQueue();
-    void AppendBlock(Block target_block);      //物理块入队
-    void PopBlock(Block &target_block);         //物理块出队
-    void GetTop(Block &target_block);          //取队首物理块
-    int GetLength();        //获取队列长度
-};

@@ -96,6 +96,7 @@ JobAllocate::AllocRes JobAllocate::ScheduleJob(JobQueue &job_queue, Job &target_
                                           ProcTable &proc_table){
     ChooseJob(job_queue, target_job);   //选择作业
     int i = AllocateResource(memory, target_job, page_table, job_queue, job_table); //分配资源
+
     if(i == 1){     //如果资源分配成功
         CreateProcess(target_job, proc_table, ready);
         return success;
@@ -129,5 +130,6 @@ int JobAllocate::AllocateResource(Memory &memory, Job job, PageTable &page_table
 void JobAllocate::CreateProcess(Job temp_job, ProcTable &proc_table, ProcQueue &ready){
     Process temp_process = * new Process(temp_job.JobId, temp_job.ReferProcId,
                                        temp_job.MemorySize);
+    temp_process.blockQueue =  temp_job.MemorySize
     temp_process.ForkProc(proc_table,ready);
 }

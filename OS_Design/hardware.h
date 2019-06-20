@@ -27,6 +27,11 @@ public:
         OwnerProcessID = -1;    //分配给的进程的ID
     }
 
+    Block(int ID){
+        Block();
+        SetBlockID(ID);
+    }
+
     //对应原InitBlock()
     void SetBlockID(int ID){
         BlockID = ID;
@@ -107,7 +112,7 @@ public:
     //构造函数
     CPU(){
         NowProcessID = 1;
-        IR = 0;
+        CurrentInsID = 0;
         CpuStatus = FREE;
     }
 
